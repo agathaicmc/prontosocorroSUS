@@ -19,7 +19,7 @@ typedef struct paciente{
     ~paciente();
 
     // jesse delete esse comentário e insira as outras funções que voce achar necessárias
-    // sugestões
+    // sugestões: n sei honestamente
 
 
 }paciente;
