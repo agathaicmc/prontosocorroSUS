@@ -15,8 +15,10 @@ destrutor da pilha
 */
 
 historico::~historico(){
-
+    while(!historicoVazio()) retirar();
 }
+
+
 
 // função que insere um novo procedimento no histórico do paciente
 bool historico::inserir(string str){
@@ -44,7 +46,7 @@ bool historico::inserir(string str){
 string historico::retirar(){
     if(historicoVazio()){
         printf("Não há procedimentos para serem retirados do histórico deste paciente.\n");
-        return;
+        return nullptr;
     }
     // guarda o procedimento atual em um elemento
     string elemento = topo->tratamento;
@@ -61,7 +63,11 @@ string historico::retirar(){
 }
 
 void historico::consultar(){
+    printf("Aqui está a lista dos procedimentos médicos deste paciente:\n");
 
+    for(procedimento *p = topo; p != nullptr; p = p->prox){
+        printf("%s\n", p->tratamento);
+    }
 }
 
 // função que checa se o historico do paciente está cheio
