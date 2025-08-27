@@ -46,7 +46,6 @@ bool historico::inserir(string str){
 string historico::retirar(){
     if(historicoVazio()){
         printf("Não há procedimentos para serem retirados do histórico deste paciente.\n");
-        // mudado de nullptr (apagar esse comentario dps)
         return {};
     }
     // guarda o procedimento atual em um elemento
@@ -63,6 +62,7 @@ string historico::retirar(){
     return elemento;
 }
 
+// função que imprime todos os elementos da pilha
 void historico::consultar(){
     printf("Aqui está a lista dos procedimentos médicos deste paciente:\n");
 
@@ -73,7 +73,7 @@ void historico::consultar(){
 
 // função que checa se o historico do paciente está cheio
 bool historico::historicoCheio(){
-    if (qtd == 10) return true;
+    if (qtd == MAX_PILHA) return true;
     else return false;
 }
 

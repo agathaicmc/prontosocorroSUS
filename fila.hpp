@@ -1,7 +1,7 @@
 #ifndef SALADEESPERA
 #define SALADEESPERA
 using namespace std;
-
+#define MAX_FILA 20
 #include "paciente.hpp"
 
 /*
@@ -12,14 +12,14 @@ a fila tem tamanho máximo arbitrário (podemos escolher).
 não há prioridade no atendimento.
 */
 
-typedef struct No{
-    paciente *prox;
-    paciente p;
-}No;
+typedef struct posicao{
+    paciente *p;
+    struct posicao *prox;
+}posicao;
 
 typedef struct fila{
-    No *frente;
-    No *tras;
+    posicao *frente;
+    posicao *tras;
     int qtd;
 
     //construtor
@@ -29,12 +29,13 @@ typedef struct fila{
     ~fila();
 
     //funções utilitárias principais
-    bool inserir(paciente p);
-    paciente retirar();
+    bool inserir(paciente *pac);
+    paciente *retirar();
+    void consultar();
 
-    //checagem de estado
-    bool filacheia();
-    bool filavazia();
+    //checagem de estado da fila
+    bool filaCheia();
+    bool filaVazia();
 }fila;
 
 #endif

@@ -1,7 +1,8 @@
 #ifndef HISTORICOMEDICO
 #define HISTORICOMEDICO
-#include <string>
 using namespace std;
+#define MAX_PILHA 10
+#include <string>
 
 /*
 o histórico de procedimentos médicos do paciente consiste em uma
