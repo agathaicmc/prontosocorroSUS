@@ -46,7 +46,8 @@ bool historico::inserir(string str){
 string historico::retirar(){
     if(historicoVazio()){
         printf("Não há procedimentos para serem retirados do histórico deste paciente.\n");
-        return nullptr;
+        // mudado de nullptr (apagar esse comentario dps)
+        return {};
     }
     // guarda o procedimento atual em um elemento
     string elemento = topo->tratamento;

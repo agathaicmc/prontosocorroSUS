@@ -7,16 +7,21 @@ construtor do paciente
 */
 
 paciente::paciente(string str){
-    // a função paciente precisa ter o construtor do historico
-    // ent vc precisa chamar a função historico() aqui no meio
+    nome = str;
+    // id = (?)
+    hist = historico();
 }
+
 
 /*
 destrutor do paciente (morte por doença não tratada)
 */
 
 paciente::~paciente(){
-
+    // deletando historico, setando id pra 0 e o nome pra string vazia
+    delete hist;
+    id = 0;
+    nome = {};
 }
 
 // espaço pras outras funções
