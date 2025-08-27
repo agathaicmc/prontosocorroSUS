@@ -18,7 +18,11 @@ destrutor da fila
 */
 
 fila::~fila(){
-
+    while(frente != nullptr){
+        posicao *aux = frente->prox;
+        delete frente;
+        frente = aux;
+    }
 }
 
 // função que insere um novo paciente na sala de espera
