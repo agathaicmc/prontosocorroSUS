@@ -8,7 +8,7 @@ using namespace std;
 a sala de espera é uma fila dinâmica, onde cada paciente
 é adicionado no momento em que dá entrada, e é excluído
 da fila ao ser chamado para atendimento.
-a fila tem tamanho máximo arbitrário (podemos escolher).
+a fila tem tamanho máximo arbitrário (20).
 não há prioridade no atendimento.
 */
 
