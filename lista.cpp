@@ -1,6 +1,7 @@
 #include <cstdio>
 #include "historico.hpp"
 #include "paciente.hpp"
+#include "lista.hpp"
 
 /*
 construtor da lista
@@ -13,7 +14,7 @@ lista::lista(){
 destrutor da lista
 */
 lista::~lista(){
-    while(head != nullptr) apagar();
+    while(head != nullptr) apagar(head->p->id);
 }
 
 
@@ -33,7 +34,7 @@ bool lista::inserir(paciente *p){
 }
 
 // função pra buscar o registro de um paciente dado um ID
-paciente *lista::busca(int id){
+item *lista::busca(int id){
     // define um ponteiro auxiliar como o head (primeiro da lista)
     item *aux = head;
 
@@ -54,7 +55,7 @@ bool lista::apagar(int id){
 
     // caso aux seja nullptr, a busca não encontrou o paciente.
     if(aux == nullptr){
-        printf("Paciente não encontrado.\n")
+        printf("Paciente não encontrado.\n");
         return false;
     }
 
@@ -84,8 +85,8 @@ bool lista::apagar(int id){
 void lista::listar(){
     item *aux = head;
     while(aux != nullptr){
-        printf("Nome: %s\n", aux->paciente->nome);
-        prinf("ID: %d\n\n", aux->paciente->id);
+        printf("Nome: %s\n", aux->p->nome);
+        printf("ID: %d\n\n", aux->p->id);
         aux = aux->prox;
     }
     return;

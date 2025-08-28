@@ -13,7 +13,7 @@ não há restrições de tamanho.
 typedef struct item{
     paciente *p;
     struct item *prox;
-}
+}item;
 
 typedef struct lista{
     item *head;
@@ -25,7 +25,7 @@ typedef struct lista{
 
     //funções utilitárias principais
     bool inserir(paciente *p);
-    paciente *busca(int id);
+    item *busca(int id);
     bool apagar(int id);
     void listar();
     
