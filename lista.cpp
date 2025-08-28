@@ -1,4 +1,5 @@
 #include <cstdio>
+#include <string>
 #include "historico.hpp"
 #include "paciente.hpp"
 #include "lista.hpp"
@@ -85,7 +86,7 @@ bool lista::apagar(int id){
 void lista::listar(){
     item *aux = head;
     while(aux != nullptr){
-        printf("Nome: %s\n", aux->p->nome);
+        printf("Nome: %s\n", aux->p->nome.c_str());
         printf("ID: %d\n\n", aux->p->id);
         aux = aux->prox;
     }

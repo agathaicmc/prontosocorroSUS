@@ -77,7 +77,7 @@ paciente *fila::retirar(){
 void fila::consultar(){
     printf("Listagem dos pacientes na fila de espera:\n");
     for(posicao *i = frente; i != nullptr; i = i->prox){
-        printf("Nome: %s\n", i->p->nome);
+        printf("Nome: %s\n", i->p->nome.c_str());
         printf("ID: %d\n\n", i->p->id);
     }
 }

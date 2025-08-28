@@ -67,7 +67,7 @@ void historico::consultar(){
     printf("Aqui está a lista dos procedimentos médicos deste paciente:\n");
 
     for(procedimento *p = topo; p != nullptr; p = p->prox){
-        printf("%s\n", p->tratamento);
+        printf("%s\n", p->tratamento.c_str());
     }
 }
 
