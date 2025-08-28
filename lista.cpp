@@ -19,11 +19,13 @@ lista::~lista(){
 }
 
 
-bool lista::inserir(paciente *p){
+bool lista::inserir(paciente *pac){
+    if(pac == nullptr) return false;
+    
     // cria um novo item
     item *aux = new item;
     // coloca o paciente dentro do item
-    aux->p = p;
+    aux->p = pac;
     // define aux->prox como head (funciona também se a lista estiver vazia, aux->prox será definido como null)
     aux->prox = head;
 
@@ -38,7 +40,8 @@ bool lista::inserir(paciente *p){
 item *lista::busca(int id){
     // define um ponteiro auxiliar como o head (primeiro da lista)
     item *aux = head;
-
+    // checando se o id é o primeiro elemento da lista
+    if(aux->p->id == id) return aux;
     // loop que percorre até achar o item anterior ao certo ou até chegar no último item
     while(aux->prox != nullptr && aux->prox->p->id != id) aux = aux->prox; // nao vai tentar acessar NULL pq a verificacao do NULL vem antes (se achar gambiarrico demais fale)
 
@@ -62,7 +65,7 @@ bool lista::apagar(int id){
 
     // caso contrario, há 3 casos diferentes: o item deletado ser o head, algum do meio ou o último.
     // caso seja o primeiro, o head será atualizado para o próximo item
-    if(aux->p->id == id) head = head->prox; // btw isso significa que é o head pq se não fosse, aux->prox->paciente->id seria igual a id, e nao aux->paciente->id (apagar esse comentario).
+    if(aux->p->id == id) head = head->prox;
     else {
         // ponteiro temporario para guardar a posicao do aux
         item *temp = aux;

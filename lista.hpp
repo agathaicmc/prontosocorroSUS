@@ -24,11 +24,11 @@ typedef struct lista{
     ~lista();
 
     //funções utilitárias principais
-    bool inserir(paciente *p);
+    bool inserir(paciente *pac);
     item *busca(int id);
     bool apagar(int id);
     void listar();
     
-} lista;
+}lista;
 
 #endif
