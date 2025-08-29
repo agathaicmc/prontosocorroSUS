@@ -87,6 +87,7 @@ bool lista::apagar(int id){
 
 // função que percorre do head até o final (null) printando tudo
 void lista::listar(){
+    printf("Registro dos pacientes:\n");
     item *aux = head;
     while(aux != nullptr){
         printf("Nome: %s\n", aux->p->nome.c_str());
