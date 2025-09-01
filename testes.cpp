@@ -9,7 +9,7 @@ using namespace std;
 
 int main(void){
     
-    lista l;
+    fila q;
     string nome;
     getline(cin, nome);
 
@@ -28,17 +28,29 @@ int main(void){
     paciente p4(nome);
     p4.id = 4;
 
-    l.inserir(&p);
-    l.inserir(&p2);
-    l.inserir(&p3);
-    l.inserir(&p4);
+    q.inserir(&p);
+    q.inserir(&p2);
+    q.inserir(&p3);
+    q.inserir(&p4);
 
-    l.listar();
+    q.consultar();
 
-    l.apagar(5);
+    paciente *temp = q.buscar(3);
+    string procedimento;
+    getline(cin, procedimento);
 
-    l.listar();
+    temp->hist.inserir(procedimento);
+    
+    
+    p3.hist.consultar();
+    
+    getline(cin, procedimento);
+    p3.hist.inserir(procedimento);
+    temp->hist.consultar();
 
+    p3.hist.retirar();
+
+    p3.hist.consultar();
 
     return(0);
 }

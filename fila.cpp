@@ -72,6 +72,22 @@ paciente *fila::retirar(){
     return temp;
 }
 
+paciente *fila::buscar(int id){
+    // define um ponteiro auxiliar apontando para o paciente da frente da fila
+    posicao *aux = frente;
+    // checa se a frente da fila já é o paciente buscado
+    if(aux->p->id == id) return aux->p;
+    // checa todos os elementos da fila até encontrar o paciente desejado
+    while(aux != nullptr && aux->p->id != id) aux = aux->prox;
+    // caso aux == nullptr, o paciente não foi encontrado
+    if(aux == nullptr){
+        printf("Paciente não está na fila\n");
+        return nullptr;
+    }
+
+    return aux->p;
+}
+
 
 // função que imprime todos os pacientes atualmente na sala de espera
 void fila::consultar(){

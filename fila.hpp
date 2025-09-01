@@ -31,6 +31,7 @@ typedef struct fila{
     //funções utilitárias principais
     bool inserir(paciente *pac);
     paciente *retirar();
+    paciente *buscar(int id);
     void consultar();
 
     //checagem de estado da fila
