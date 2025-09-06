@@ -1,8 +1,8 @@
 all:
-	g++ historico.cpp paciente.cpp fila.cpp lista.cpp testes.cpp -o testes
+	g++ historico.cpp paciente.cpp fila.cpp lista.cpp prontosocorro.cpp -o prontosocorro
 
 run:
-	./testes
+	./prontosocorro
 
 clean:
-	rm testes
+	rm prontosocorro

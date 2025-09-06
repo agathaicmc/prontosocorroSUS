@@ -91,6 +91,11 @@ paciente *fila::buscar(int id){
 
 // função que imprime todos os pacientes atualmente na sala de espera
 void fila::consultar(){
+    if(filaVazia()){
+        printf("Não há pacientes na sala de espera no momento.\n");
+        return;
+    }
+
     printf("Listagem dos pacientes na fila de espera:\n");
     for(posicao *i = frente; i != nullptr; i = i->prox){
         printf("Nome: %s\n", i->p->nome.c_str());

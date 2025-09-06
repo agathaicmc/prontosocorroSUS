@@ -64,6 +64,10 @@ string historico::retirar(){
 
 // função que imprime todos os elementos da pilha
 void historico::consultar(){
+    if(historicoVazio()){
+        printf("Não há procedimentos no histórico deste paciente.\n");
+        return;
+    }
     printf("Aqui está a lista dos procedimentos médicos deste paciente:\n");
 
     for(procedimento *p = topo; p != nullptr; p = p->prox){

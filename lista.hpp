@@ -17,6 +17,7 @@ typedef struct item{
 
 typedef struct lista{
     item *head;
+    int qtd;
     
     // construtor
     lista();

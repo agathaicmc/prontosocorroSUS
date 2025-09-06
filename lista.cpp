@@ -9,6 +9,7 @@ construtor da lista
 */
 lista::lista(){
     head = nullptr;
+    qtd = 0;
 }
 
 /*
@@ -24,14 +25,16 @@ bool lista::inserir(paciente *pac){
     
     // cria um novo item
     item *aux = new item;
+    // seta automaticamente o id do novo paciente como o próximo inteiro disponível
+    pac->id = qtd + 1;
     // coloca o paciente dentro do item
     aux->p = pac;
     // define aux->prox como head (funciona também se a lista estiver vazia, aux->prox será definido como null)
     aux->prox = head;
-
     // atualiza o head como o item criado
     head = aux;
-
+    // atualiza a quantidade de pacientes na lista
+    qtd++;
     // nao sei se tem alguma condicao para retornar false, só se a memória lotasse (nao vai acontecer)
     return true;
 }
@@ -76,18 +79,19 @@ bool lista::apagar(int id){
     }
 
     // ponteiros do item são setados como nullptr
-    aux->p = nullptr;
+    delete aux->p;
     aux->prox = nullptr;
-
+    
     // o item é deletado
     delete aux;
-
+    // atualiza a quantidade de pacientes na lista
+    qtd--;
     return true;
 }
 
 // função que percorre do head até o final (null) printando tudo
 void lista::listar(){
-    printf("Registro dos pacientes:\n");
+    printf("\nRegistro dos pacientes:\n");
     item *aux = head;
     while(aux != nullptr){
         printf("Nome: %s\n", aux->p->nome.c_str());
