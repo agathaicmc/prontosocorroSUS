@@ -26,7 +26,7 @@ typedef struct lista{
 
     //funções utilitárias principais
     bool inserir(paciente *pac);
-    item *busca(int id);
+    item *buscar(int id);
     bool apagar(int id);
     void listar();
     

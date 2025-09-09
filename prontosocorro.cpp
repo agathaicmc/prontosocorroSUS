@@ -32,6 +32,8 @@ void criarPaciente(lista *list, fila *queue){
     printf("Insira o nome do paciente a ser registrado.\n");
     getline(cin, nomePaciente);
 
+    // verificar se paciente já existe na lista, mas coloca na fila de qualquer forma
+
     paciente *pac = new paciente(nomePaciente);
 
     list->inserir(pac);
@@ -89,5 +91,13 @@ void consultarHistorico(lista *list){
 
     scanf("%d", &id);
 
-    // adicionar função
+    item *it = list->buscar(id);
+
+    if(it == nullptr) return;
+
+    if(it == list->head){
+        if(list->head->p->id == id) it->p->hist.consultar();
+    } else {
+        it->prox->p->hist.consultar();
+    }
 }

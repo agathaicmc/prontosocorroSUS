@@ -40,7 +40,7 @@ bool lista::inserir(paciente *pac){
 }
 
 // função pra buscar o registro de um paciente dado um ID
-item *lista::busca(int id){
+item *lista::buscar(int id){
     // define um ponteiro auxiliar como o head (primeiro da lista)
     item *aux = head;
     // checando se o id é o primeiro elemento da lista
@@ -58,7 +58,7 @@ item *lista::busca(int id){
 // função para apagar o registro de um paciente dado um ID
 bool lista::apagar(int id){
     // achando o paciente com a função busca
-    item *aux = busca(id);
+    item *aux = buscar(id);
 
     // caso aux seja nullptr, a busca não encontrou o paciente.
     if(aux == nullptr){
