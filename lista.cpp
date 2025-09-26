@@ -9,7 +9,9 @@ construtor da lista
 */
 lista::lista(){
     head = nullptr;
+    tail = nullptr;
     qtd = 0;
+    idAtual = 1;
 }
 
 /*
@@ -26,16 +28,18 @@ bool lista::inserir(paciente *pac){
     // cria um novo item
     item *aux = new item;
     // seta automaticamente o id do novo paciente como o próximo inteiro disponível
-    pac->id = qtd + 1;
+    pac->id = idAtual++;
     // coloca o paciente dentro do item
     aux->p = pac;
-    // define aux->prox como head (funciona também se a lista estiver vazia, aux->prox será definido como null)
-    aux->prox = head;
-    // atualiza o head como o item criado
-    head = aux;
+
+    // se a lista for vazia, head e tail apontam para aux
+    if(listaVazia()) head = aux;
+    // do contrário, alterar o tail->prox para o novo elemento
+    else tail->prox = aux;
+    // atualiza tail para o aux
+    tail = aux;
     // atualiza a quantidade de pacientes na lista
     qtd++;
-    // nao sei se tem alguma condicao para retornar false, só se a memória lotasse (nao vai acontecer)
     return true;
 }
 
@@ -62,14 +66,14 @@ bool lista::apagar(int id){
 
     // caso aux seja nullptr, a busca não encontrou o paciente.
     if(aux == nullptr){
-        printf("Paciente não encontrado.\n");
+        printf("\nPaciente não encontrado.\n");
         return false;
     }
 
     // caso contrario, há 3 casos diferentes: o item deletado ser o head, algum do meio ou o último.
     // caso seja o primeiro, o head será atualizado para o próximo item
     if(aux->p->id == id) head = head->prox;
-    else {
+    else{
         // ponteiro temporario para guardar a posicao do aux
         item *temp = aux;
         // aux vira o próximo item, ou seja, o que deve ser deletado
@@ -99,4 +103,13 @@ void lista::listar(){
         aux = aux->prox;
     }
     return;
+}
+
+bool lista::listaVazia(){
+    if(qtd == 0) return true;
+    else return false;
+}
+
+int lista::listaSize(){
+    return qtd;
 }

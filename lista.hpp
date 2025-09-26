@@ -17,7 +17,9 @@ typedef struct item{
 
 typedef struct lista{
     item *head;
+    item *tail;
     int qtd;
+    int idAtual;
     
     // construtor
     lista();
@@ -29,6 +31,10 @@ typedef struct lista{
     item *buscar(int id);
     bool apagar(int id);
     void listar();
+
+    //funções de checagem de estado
+    bool listaVazia();
+    int listaSize();
     
 }lista;
 

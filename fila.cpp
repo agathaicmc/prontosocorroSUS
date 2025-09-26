@@ -24,7 +24,7 @@ fila::~fila(){
 // função que insere um novo paciente na sala de espera
 bool fila::inserir(paciente *pac){
     if(filaCheia()){
-        printf("A sala de espera está lotada.\n");
+        printf("\nA sala de espera está lotada.\n");
         return false;
     }
 
@@ -52,7 +52,7 @@ bool fila::inserir(paciente *pac){
 // função que chama o paciente que está na primeira posição da fila
 paciente *fila::retirar(){
     if(filaVazia()){
-        printf("Não há pacientes na sala de espera no momento.\n");
+        printf("\nNão há pacientes na sala de espera no momento.\n");
         return nullptr;
     }
 
@@ -73,6 +73,7 @@ paciente *fila::retirar(){
 }
 
 paciente *fila::buscar(int id){
+    if(filaVazia()) return nullptr;
     // define um ponteiro auxiliar apontando para o paciente da frente da fila
     posicao *aux = frente;
     // checa se a frente da fila já é o paciente buscado
@@ -81,7 +82,6 @@ paciente *fila::buscar(int id){
     while(aux != nullptr && aux->p->id != id) aux = aux->prox;
     // caso aux == nullptr, o paciente não foi encontrado
     if(aux == nullptr){
-        printf("Paciente não está na fila\n");
         return nullptr;
     }
 
@@ -92,11 +92,11 @@ paciente *fila::buscar(int id){
 // função que imprime todos os pacientes atualmente na sala de espera
 void fila::consultar(){
     if(filaVazia()){
-        printf("Não há pacientes na sala de espera no momento.\n");
+        printf("\nNão há pacientes na sala de espera no momento.\n");
         return;
     }
 
-    printf("Listagem dos pacientes na fila de espera:\n");
+    printf("\nListagem dos pacientes na fila de espera:\n");
     for(posicao *i = frente; i != nullptr; i = i->prox){
         printf("Nome: %s\n", i->p->nome.c_str());
         printf("ID: %d\n\n", i->p->id);
