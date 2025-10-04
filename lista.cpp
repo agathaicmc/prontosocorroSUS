@@ -50,7 +50,7 @@ item *lista::buscar(int id){
     // checando se o id é o primeiro elemento da lista
     if(aux->p->id == id) return aux;
     // loop que percorre até achar o item anterior ao certo ou até chegar no último item
-    while(aux->prox != nullptr && aux->prox->p->id != id) aux = aux->prox; // nao vai tentar acessar NULL pq a verificacao do NULL vem antes (se achar gambiarrico demais fale)
+    while(aux->prox != nullptr && aux->prox->p->id != id) aux = aux->prox;
 
     // se aux->prox for nullptr significa que não foi encontrado o id, então aux é definido como nullptr
     if(aux->prox == nullptr) aux = nullptr;
@@ -95,6 +95,10 @@ bool lista::apagar(int id){
 
 // função que percorre do head até o final (null) printando tudo
 void lista::listar(){
+    if(listaVazia()){
+        printf("A lista de pacientes está vazia.");
+        return;
+    }
     printf("\nRegistro dos pacientes:\n");
     item *aux = head;
     while(aux != nullptr){

@@ -2,6 +2,7 @@
 #include <string>
 #include <iostream>
 using namespace std;
+#include "IO.hpp"
 #include "historico.hpp"
 #include "paciente.hpp"
 #include "fila.hpp"
@@ -19,13 +20,16 @@ int main(void){
 
     lista l;
     fila f;
+
+    LOAD(&l, &f);
+
     int comandoAtual;
 
     // rodando comandos de forma indefinida
 
     while(comandoAtual != 8){
         // interface simples para o usuário
-        printf("\nDigite o comando que deseja executar.\n\n");
+        printf("\nLista de comandos do sistema hospitalar:\n");
         printf("1: Registrar paciente\n");
         printf("2: Registrar óbito de paciente\n");
         printf("3: Adicionar procedimento ao histórico médico de um paciente\n");
@@ -33,7 +37,8 @@ int main(void){
         printf("5: Chamar paciente para atendimento médico\n");
         printf("6: Mostrar fila de espera\n");
         printf("7: Mostrar histórico médico de um paciente\n");
-        printf("8: Sair\n");
+        printf("8: Sair\n\n");
+        printf("Digite o comando que deseja executar: ");
 
         scanf("%d", &comandoAtual);
         // cin.ignore() serve para ignorar o newline após o scanf
@@ -69,8 +74,9 @@ int main(void){
 
     }
 
-    return(0);
+    SAVE(&l, &f);
 
+    return(0);
 }
 
 
@@ -83,7 +89,7 @@ void registrarPaciente(lista *list, fila *queue){
 
     string nomePaciente;
 
-    printf("\nInsira o nome do paciente a ser registrado.\n");
+    printf("\nInsira o nome do paciente a ser registrado: ");
     getline(cin, nomePaciente);
 
     // verificar se paciente já existe na lista, mas coloca na fila de qualquer forma
