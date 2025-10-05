@@ -173,7 +173,7 @@ bool LOAD(lista *lista, fila *fila){
         // Inserção na fila por meio de uma busca na lista (novamente, todos os pacientes da fila estão necessariamente na lista)
         item * aux = lista->buscar(id);
         // Tratamento de exceção aux == head
-        if(aux->prox->p->id == id) aux = aux->prox;
+        if(aux->prox != nullptr && aux->prox->p->id == id) aux = aux->prox;
         fila->inserir(aux->p);
     }
 
