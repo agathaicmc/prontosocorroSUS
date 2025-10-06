@@ -27,10 +27,12 @@ bool lista::inserir(paciente *pac){
     
     // cria um novo item
     item *aux = new item;
-    // seta automaticamente o id do novo paciente como o próximo inteiro disponível
-    pac->id = idAtual++;
+    // seta automaticamente o id do novo paciente como o próximo inteiro disponível, a não ser que um id já exista
+    if(pac->id == 0) pac->id = idAtual++;
     // coloca o paciente dentro do item
     aux->p = pac;
+    // agora o prox aponta para nullptr
+    aux->prox = nullptr;
 
     // se a lista for vazia, head e tail apontam para aux
     if(listaVazia()) head = aux;
@@ -70,7 +72,7 @@ bool lista::apagar(int id){
         return false;
     }
 
-    // caso contrario, há 3 casos diferentes: o item deletado ser o head, algum do meio ou o último.
+    // caso contrario, há 2 casos diferentes: o item deletado ser o head ou não
     // caso seja o primeiro, o head será atualizado para o próximo item
     if(aux->p->id == id) head = head->prox;
     else{

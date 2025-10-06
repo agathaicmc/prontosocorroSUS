@@ -49,14 +49,13 @@ bool SAVE(lista *lista, fila *fila) {
     fclose(fp_lista); fp_lista = nullptr;
 
 
-
     // Salvando os itens da fila
     /*
     Na fila, apenas os números de id são salvos, pois como todos os pacientes que estão na fila estão também na lista,
     não há necessidade de salvar todos os campos de informação novamente (inclusive, criar novos pacientes resulta
     na criação de dois pacientes que são a mesma pessoa, o que posteriormente causa vazamento de memória). Na leitura, 
     o id é utilizado para obter o paciente por meio de uma busca na lista.
-    */ 
+    */
 
     // Abrindo o arquivo da fila no modo de escrita binário, retorna false se houver algum erro
     FILE *fp_fila = fopen("fila_itens.bin", "wb");
@@ -146,6 +145,10 @@ bool LOAD(lista *lista, fila *fila){
     for(int i = 0; i<tam; i++){
         lista->inserir(pacs[i]);
     }
+
+    // Ajustando o valor do idAtual para posteriores inserções durante o programa
+    if(tam) lista->idAtual = lista->tail->p->id + 1;
+
     // Libera memória e fecha o arquivo da lista
     delete[] pacs;
     fclose(fp_lista);
@@ -172,9 +175,9 @@ bool LOAD(lista *lista, fila *fila){
 
         // Inserção na fila por meio de uma busca na lista (novamente, todos os pacientes da fila estão necessariamente na lista)
         item * aux = lista->buscar(id);
-        // Tratamento de exceção aux == head
-        if(aux->prox != nullptr && aux->prox->p->id == id) aux = aux->prox;
-        fila->inserir(aux->p);
+        // Tratamento de exceção em que o elemento buscado é o head da lista
+        if(id == lista->head->p->id) fila->inserir(aux->p);
+        else fila->inserir(aux->prox->p);
     }
 
     // Libera memória
