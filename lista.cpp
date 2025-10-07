@@ -47,6 +47,7 @@ bool lista::inserir(paciente *pac){
 
 // função pra buscar o registro de um paciente dado um ID
 item *lista::buscar(int id){
+    if(listaVazia()) return nullptr;
     // define um ponteiro auxiliar como o head (primeiro da lista)
     item *aux = head;
     // checando se o id é o primeiro elemento da lista
@@ -55,6 +56,23 @@ item *lista::buscar(int id){
     while(aux->prox != nullptr && aux->prox->p->id != id) aux = aux->prox;
 
     // se aux->prox for nullptr significa que não foi encontrado o id, então aux é definido como nullptr
+    if(aux->prox == nullptr) aux = nullptr;
+
+    // acho que é melhor verificar se a busca retornou null fora da funcao, me parece mais pratico
+    return aux;
+}
+
+// função pra buscar o registro de um paciente dado seu nome
+item *lista::buscarNome(string nome){
+    if(listaVazia()) return nullptr;
+    // define um ponteiro auxiliar como o head (primeiro da lista)
+    item *aux = head;
+    // checando se o nome é o primeiro elemento da lista
+    if(aux->p->nome == nome) return aux;
+    // loop que percorre até achar o item anterior ao certo ou até chegar no último item
+    while(aux->prox != nullptr && aux->prox->p->nome != nome) aux = aux->prox;
+
+    // se aux->prox for nullptr significa que não foi encontrado o nome, então aux é definido como nullptr
     if(aux->prox == nullptr) aux = nullptr;
 
     // acho que é melhor verificar se a busca retornou null fora da funcao, me parece mais pratico

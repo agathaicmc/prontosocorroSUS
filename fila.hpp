@@ -32,6 +32,7 @@ typedef struct fila{
     bool inserir(paciente *pac);
     paciente *retirar();
     paciente *buscar(int id);
+    paciente *buscarNome(string nome);
     void consultar();
 
     //checagem de estado da fila

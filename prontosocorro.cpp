@@ -92,7 +92,19 @@ void registrarPaciente(lista *list, fila *queue){
     printf("\nInsira o nome do paciente a ser registrado: ");
     getline(cin, nomePaciente);
 
-    // verificar se paciente já existe na lista, mas coloca na fila de qualquer forma
+    item *it = list->buscarNome(nomePaciente);
+    // checando se o paciente já existe na lista
+    if(it != nullptr){
+        if(queue->buscarNome(nomePaciente) != nullptr){
+            printf("\nPaciente já está na fila!\n");
+            return;
+        }
+        else{
+            queue->inserir(it->p);
+            printf("\n%s retornou ao pronto-socorro!\n", it->p->nome.c_str());
+            return;
+        }
+    }
 
     paciente *pac = new paciente(nomePaciente);
 
