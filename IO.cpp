@@ -15,6 +15,9 @@ bool SAVE(lista *lista, fila *fila) {
     FILE *fp_lista = fopen("lista_itens.bin", "wb");
     if(!fp_lista) return false;
 
+    // Escreve o valor idAtual para não pegar o id de um paciente falecido posteriormente
+    fwrite(&(lista->idAtual), sizeof(int), 1, fp_lista);
+
     // Escreve o número de itens da lista, para saber quantas vezes deve ser feita a leitura
     fwrite(&(lista->qtd), sizeof(int), 1, fp_lista);
 
@@ -88,6 +91,11 @@ bool LOAD(lista *lista, fila *fila){
     FILE *fp_lista = fopen("lista_itens.bin", "rb");
     if(fp_lista == NULL) return false;
 
+    // Leitura do idAtual armazenado, já o colocando na lista
+    int idAtual;
+    fread(&idAtual, sizeof(int), 1, fp_lista);
+    lista->idAtual = idAtual;
+
     // Leitura da quantidade de itens da lista
     int tam;
     fread(&tam, sizeof(int), 1, fp_lista);
@@ -146,13 +154,9 @@ bool LOAD(lista *lista, fila *fila){
         lista->inserir(pacs[i]);
     }
 
-    // Ajustando o valor do idAtual para posteriores inserções durante o programa
-    if(tam) lista->idAtual = lista->tail->p->id + 1;
-
     // Libera memória e fecha o arquivo da lista
     delete[] pacs;
     fclose(fp_lista);
-
 
 
     // Carregando os itens do arquvio da fila

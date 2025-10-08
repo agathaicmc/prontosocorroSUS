@@ -15,6 +15,7 @@ void removerProcedimento(fila *queue);
 void chamarPaciente(fila *queue);
 void consultarFila(fila *queue);
 void consultarHistorico(lista *list);
+void consultarLista(lista *list);
 
 int main(void){
 
@@ -23,11 +24,11 @@ int main(void){
 
     LOAD(&l, &f);
 
-    int comandoAtual;
+    int comandoAtual = -1;
 
     // rodando comandos de forma indefinida
 
-    while(comandoAtual != 8){
+    while(comandoAtual != 9){
         // interface simples para o usuário
         printf("\nLista de comandos do sistema hospitalar:\n");
         printf("1: Registrar paciente\n");
@@ -37,7 +38,8 @@ int main(void){
         printf("5: Chamar paciente para atendimento médico\n");
         printf("6: Mostrar fila de espera\n");
         printf("7: Mostrar histórico médico de um paciente\n");
-        printf("8: Sair\n\n");
+        printf("8: Listar registros de pacientes\n");
+        printf("9: Sair\n\n");
         printf("Digite o comando que deseja executar: ");
 
         scanf("%d", &comandoAtual);
@@ -68,6 +70,9 @@ int main(void){
                 consultarHistorico(&l);
                 break;
             case 8:
+                consultarLista(&l);
+                break;
+            case 9:
                 printf("\nEncerrando sistema...\n");
                 break;
         }
@@ -243,4 +248,8 @@ void registrarObito(lista *list, fila *queue){
 
     list->apagar(id);
     printf("\n%s morreu :(\nDescanse em paz!\n", nomePaciente.c_str());
+}
+
+void consultarLista(lista *list){
+    list->listar();
 }
