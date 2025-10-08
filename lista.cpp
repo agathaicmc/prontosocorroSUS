@@ -116,7 +116,7 @@ bool lista::apagar(int id){
 // função que percorre do head até o final (null) printando tudo
 void lista::listar(){
     if(listaVazia()){
-        printf("A lista de pacientes está vazia.");
+        printf("\nA lista de pacientes está vazia.\n");
         return;
     }
     printf("\nRegistro dos pacientes:\n");
