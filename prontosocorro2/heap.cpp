@@ -14,6 +14,19 @@ heap::~heap(){
     fim = -1;
 }
 
+//funções para facilitar cálculo de posições relativas na heap
+int heap::pai(int i){
+    return (i - 1)/2;
+}
+
+int heap::filhoEsq(int i){
+    return 2*i + 1;
+}
+
+int heap::filhoDir(int i){
+    return 2*i + 2;
+}
+
 // função para obter a prioridade de um elemento em uma posição da fila
 int heap::priority(int i){
     return fila[i]->priority;
@@ -29,13 +42,13 @@ void heap::heap_swap(int i, int j){
 // função para restaurar a propriedade heap de baixo para cima
 void heap::heap_fix_up(){
     int w = fim;
-    int Pai = pai(w);
+    int parent = pai(w);
 
     // troca um elemento com seu pai até que ele esteja na posição certa
-    while (w > 0 && priority(w) < priority(Pai)){
-        heap_swap(w, Pai);
-        w = Pai;
-        Pai = pai(Pai);
+    while (w > 0 && priority(w) < priority(parent)){
+        heap_swap(w, parent);
+        w = parent;
+        parent = pai(parent);
     }
 }
 
@@ -107,3 +120,23 @@ bool heap::heap_vazia(){
     return(fim == -1);
 }
 
+// se quiser consertar o print...
+void heap::heap_consultar(){
+    if(heap_vazia()){
+        printf("\nNão há pacientes na sala de espera no momento.\n");
+        return;
+    }
+
+    for(int i = 0; i <= fim; i++){
+        printf("Nome: %s\n", fila[i]->nome.c_str());
+        printf("ID: %d\n", fila[i]->id);
+        printf("Prioridade: %d\n\n", priority(i));
+    }
+}
+
+paciente *heap::buscar(int id){
+    for(int i = 0; i <= fim; i++){
+        if(fila[i]->id == id) return fila[i];
+    }
+    return nullptr;
+}

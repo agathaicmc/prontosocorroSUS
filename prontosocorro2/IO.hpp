@@ -2,7 +2,7 @@
 	#define IO_H
     #include "historico.hpp"
 	#include "paciente.hpp"
-    #include "fila.hpp"
+    #include "heap.hpp"
     #include "lista.hpp"
 
     bool SAVE(lista *lista, fila *fila); // Salva os itens da lista e da fila em arquivos

@@ -2,27 +2,27 @@
 #include <string>
 #include <iostream>
 using namespace std;
-#include "IO.hpp"
+//#include "IO.hpp"
 #include "historico.hpp"
 #include "paciente.hpp"
-#include "fila.hpp"
+#include "heap.hpp"
 #include "lista.hpp"
 
-void registrarPaciente(lista *list, fila *queue);
-void registrarObito(lista *list, fila *queue);
-void adicionarProcedimento(fila *queue);
-void removerProcedimento(fila *queue);
-void chamarPaciente(fila *queue);
-void consultarFila(fila *queue);
+void registrarPaciente(lista *list, heap *pqueue);
+void registrarObito(lista *list, heap *pqueue);
+void adicionarProcedimento(heap *pqueue);
+void removerProcedimento(heap *pqueue);
+void chamarPaciente(heap *pqueue);
+void consultarFila(heap *pqueue);
 void consultarHistorico(lista *list);
 void consultarLista(lista *list);
 
 int main(void){
 
     lista l;
-    fila f;
+    heap h;
 
-    LOAD(&l, &f);
+    //LOAD(&l, &h);
 
     int comandoAtual = -1;
 
@@ -49,22 +49,22 @@ int main(void){
         // mais comandos podem ser adicionados
         switch(comandoAtual){
             case 1:
-                registrarPaciente(&l, &f);
+                registrarPaciente(&l, &h);
                 break;
             case 2:
-                registrarObito(&l, &f);
+                registrarObito(&l, &h);
                 break;
             case 3:
-                adicionarProcedimento(&f);
+                adicionarProcedimento(&h);
                 break;
             case 4:
-                removerProcedimento(&f);
+                removerProcedimento(&h);
                 break;
             case 5:
-                chamarPaciente(&f);
+                chamarPaciente(&h);
                 break;
             case 6:
-                consultarFila(&f);
+                consultarFila(&h);
                 break;
             case 7:
                 consultarHistorico(&l);
@@ -79,48 +79,37 @@ int main(void){
 
     }
 
-    SAVE(&l, &f);
+    //SAVE(&l, &h);
 
     return(0);
 }
 
 
 // função que registra um novo paciente, armazenando-o na lista e na fila
-void registrarPaciente(lista *list, fila *queue){
-    if(queue->filaCheia()){
+void registrarPaciente(lista *list, heap *pqueue){
+    if(pqueue->heap_cheia()){
         printf("\nA sala de espera está lotada.\n");
         return;
     }
 
     string nomePaciente;
+    int pri;
 
     printf("\nInsira o nome do paciente a ser registrado: ");
     getline(cin, nomePaciente);
 
-    item *it = list->buscarNome(nomePaciente);
-    // checando se o paciente já existe na lista
-    if(it != nullptr){
-        if(queue->buscarNome(nomePaciente) != nullptr){
-            printf("\nPaciente já está na fila!\n");
-            return;
-        }
-        else{
-            queue->inserir(it->p);
-            printf("\n%s retornou ao pronto-socorro!\n", it->p->nome.c_str());
-            return;
-        }
-    }
-
-    paciente *pac = new paciente(nomePaciente);
+    printf("\nInsira o nível de prioridade do paciente: ");
+    scanf("%d", &pri);
+    paciente *pac = new paciente(nomePaciente, pri);
 
     list->inserir(pac);
-    queue->inserir(pac);
+    pqueue->inserir(pac);
     printf("\nPaciente registrado com sucesso!\n");
 }
 
 // função que adiciona um procedimento médico ao histórico de um paciente, mediante busca por ID
-void adicionarProcedimento(fila *queue){
-    if(queue->filaVazia()){
+void adicionarProcedimento(heap *pqueue){
+    if(pqueue->heap_vazia()){
         printf("\nNão há pacientes na sala de espera no momento.\n");
         return;
     }
@@ -133,7 +122,7 @@ void adicionarProcedimento(fila *queue){
     // cin.ignore() serve para ignorar o newline após o scanf
     cin.ignore();
     
-    paciente *pac = queue->buscar(id);
+    paciente *pac = pqueue->buscar(id);
     if(pac == nullptr){
         printf("\nPaciente não está na fila\n");
         return;
@@ -152,8 +141,8 @@ void adicionarProcedimento(fila *queue){
 }
 
 // função que remove um procedimento médico ao histórico de um paciente, mediante busca por ID
-void removerProcedimento(fila *queue){
-    if(queue->filaVazia()){
+void removerProcedimento(heap *pqueue){
+    if(pqueue->heap_vazia()){
         printf("\nNão há pacientes na sala de espera no momento.\n");
         return;
     }
@@ -163,7 +152,7 @@ void removerProcedimento(fila *queue){
 
     scanf("%d", &id);
 
-    paciente *pac = queue->buscar(id);
+    paciente *pac = pqueue->buscar(id);
     if(pac == nullptr){
         printf("\nPaciente não está na fila\n");
         return;
@@ -177,15 +166,15 @@ void removerProcedimento(fila *queue){
 }
 
 // função que remove o paciente da frente da fila
-void chamarPaciente(fila *queue){
-    paciente *pac = queue->retirar();
+void chamarPaciente(heap *pqueue){
+    paciente *pac = pqueue->retirar();
     if(pac == nullptr) return;
     printf("\n%s foi chamado para atendimento!\n", pac->nome.c_str());
 }
 
 // função que imprime todos os pacientes da fila
-void consultarFila(fila *queue){
-    queue->consultar();
+void consultarFila(heap *pqueue){
+    pqueue->heap_consultar();
 }
 
 // função que consulta o histórico médico de um paciente, mediante busca por ID
@@ -213,7 +202,7 @@ void consultarHistorico(lista *list){
 }
 
 // obito! obito uchiha!
-void registrarObito(lista *list, fila *queue){
+void registrarObito(lista *list, heap *pqueue){
     if(list->listaVazia()){
         printf("\nNão há pacientes registrados no sistema.\n");
         return;
@@ -228,7 +217,7 @@ void registrarObito(lista *list, fila *queue){
     // fazendo a checagem se o paciente está ou não na fila.
     // afinal, pacientes na fila são imortais
 
-    paciente *pac = queue->buscar(id);
+    paciente *pac = pqueue->buscar(id);
     if(pac != nullptr){ // tecnicamente não é necessário colocar esse != nullptr porém acho mais legível
         printf("\nPaciente ainda está na fila de espera. É proibido morrer!\n");
         return;

@@ -1,5 +1,5 @@
 all:
-	g++ historico.cpp paciente.cpp fila.cpp lista.cpp IO.cpp prontosocorro.cpp -o prontosocorro -g
+	g++ historico.cpp paciente.cpp heap.cpp lista.cpp prontosocorro.cpp -o prontosocorro -g
 
 run:
 	./prontosocorro

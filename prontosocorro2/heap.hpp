@@ -21,6 +21,9 @@ typedef struct heap{
     ~heap();
 
     //funções utilitárias principais
+    int pai(int i);
+    int filhoEsq(int i);
+    int filhoDir(int i);
     void heap_swap(int i, int j);
     void heap_fix_up();
     bool inserir(paciente *pac);
@@ -31,12 +34,9 @@ typedef struct heap{
     paciente *retirar();
     bool heap_cheia();
     bool heap_vazia();
+    void heap_consultar();
+    paciente *buscar(int id);
 }heap;
-
-//funções para facilitar cálculo de posições relativas na heap
-int pai(int i){return (i - 1)/2;}
-int filhoEsq(int i){return 2*i + 1;}
-int filhoDir(int i){return 2*i + 2;}
 
 
 #endif

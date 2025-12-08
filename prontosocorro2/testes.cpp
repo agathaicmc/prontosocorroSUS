@@ -10,8 +10,23 @@ using namespace std;
 
 int main(void){
 
-    paciente *pac = new paciente("joaozinho", 2);
+    heap fila;
 
-    printf("%s\n", pac->nome.c_str());
-    printf("%d\n", pac->priority);
+    paciente *pac = new paciente("joaozinho", 2);
+    paciente *pac2 = new paciente("henry", 3);
+    paciente *pac3 = new paciente("agatha", 1);
+    paciente *pac4 = new paciente("berry", 1);
+
+    fila.inserir(pac2);
+    fila.heap_listar();
+    printf("\n");
+    fila.inserir(pac);
+    fila.heap_listar();
+    printf("\n");
+    fila.inserir(pac3);
+    fila.heap_listar();
+    printf("\n");
+    fila.inserir(pac4);
+    fila.heap_listar();
+    printf("\n");
 }
