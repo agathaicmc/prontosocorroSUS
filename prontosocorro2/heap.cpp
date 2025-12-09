@@ -128,9 +128,27 @@ void heap::heap_consultar(){
     }
 
     for(int i = 0; i <= fim; i++){
+        int p = priority(i);
         printf("Nome: %s\n", fila[i]->nome.c_str());
         printf("ID: %d\n", fila[i]->id);
-        printf("Prioridade: %d\n\n", priority(i));
+        printf("Prioridade: %d - ", p);
+        switch (p){
+            case 1:
+                printf("Emergência\n\n");
+                break;
+            case 2:
+                printf("Muito Urgente\n\n");
+                break;
+            case 3:
+                printf("Urgente\n\n");
+                break;
+            case 4:
+                printf("Pouco Urgente\n\n");
+                break;
+            case 5:
+                printf("Não Urgente\n\n");
+                break;
+        }
     }
 }
 
