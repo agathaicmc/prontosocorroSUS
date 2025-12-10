@@ -118,7 +118,7 @@ item *avl::insereAux(item *raiz, paciente *pac){
         // cria um novo item
         return raiz = new item(pac);
     }
-
+    
     // procura a posição certa para inserção
     if(raiz->p->id > pac->id) 
         raiz->esq = insereAux(raiz->esq, pac);
@@ -133,6 +133,8 @@ item *avl::insereAux(item *raiz, paciente *pac){
 // função de inserção
 bool avl::inserir(paciente *pac){
     if(pac == nullptr) return false;
+    // seta automaticamente o id do novo paciente como o próximo inteiro disponível, a não ser que um id já exista
+    if(pac->id == 0) pac->id = idAtual++;
     // realiza a inserção de fato
     raiz = insereAux(raiz, pac);
     // atualiza a quantidade de elementos na avl
