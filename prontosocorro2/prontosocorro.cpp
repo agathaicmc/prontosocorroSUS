@@ -6,23 +6,23 @@ using namespace std;
 #include "historico.hpp"
 #include "paciente.hpp"
 #include "heap.hpp"
-#include "lista.hpp"
+#include "AVL.hpp"
 
-void registrarPaciente(lista *list, heap *pqueue);
-void registrarObito(lista *list, heap *pqueue);
+void registrarPaciente(avl *tree, heap *pqueue);
+void registrarObito(avl *tree, heap *pqueue);
 void adicionarProcedimento(heap *pqueue);
 void removerProcedimento(heap *pqueue);
 void chamarPaciente(heap *pqueue);
 void consultarFila(heap *pqueue);
-void consultarHistorico(lista *list);
-void consultarLista(lista *list);
+void consultarHistorico(avl *tree);
+void consultarLista(avl *tree);
 
 int main(void){
 
-    lista l;
+    avl a;
     heap h;
 
-    //LOAD(&l, &h);
+    //LOAD(&a, &h);
 
     int comandoAtual = -1;
 
@@ -49,10 +49,10 @@ int main(void){
         // mais comandos podem ser adicionados
         switch(comandoAtual){
             case 1:
-                registrarPaciente(&l, &h);
+                registrarPaciente(&a, &h);
                 break;
             case 2:
-                registrarObito(&l, &h);
+                registrarObito(&a, &h);
                 break;
             case 3:
                 adicionarProcedimento(&h);
@@ -67,10 +67,10 @@ int main(void){
                 consultarFila(&h);
                 break;
             case 7:
-                consultarHistorico(&l);
+                consultarHistorico(&a);
                 break;
             case 8:
-                consultarLista(&l);
+                consultarLista(&a);
                 break;
             case 9:
                 printf("\nEncerrando sistema...\n");
@@ -79,14 +79,14 @@ int main(void){
 
     }
 
-    //SAVE(&l, &h);
+    //SAVE(&a, &h);
 
     return(0);
 }
 
 
 // função que registra um novo paciente, armazenando-o na lista e na fila
-void registrarPaciente(lista *list, heap *pqueue){
+void registrarPaciente(avl *tree, heap *pqueue){
     if(pqueue->heap_cheia()){
         printf("\nA sala de espera está lotada.\n");
         return;
@@ -102,7 +102,7 @@ void registrarPaciente(lista *list, heap *pqueue){
     scanf("%d", &pri);
     paciente *pac = new paciente(nomePaciente, pri);
 
-    list->inserir(pac);
+    tree->inserir(pac);
     pqueue->inserir(pac);
     printf("\nPaciente registrado com sucesso!\n");
 }
@@ -178,8 +178,8 @@ void consultarFila(heap *pqueue){
 }
 
 // função que consulta o histórico médico de um paciente, mediante busca por ID
-void consultarHistorico(lista *list){
-    if(list->listaVazia()){
+void consultarHistorico(avl *tree){
+    if(tree->avl_vazia()){
         printf("\nNão há pacientes registrados no sistema.\n");
         return;
     }
@@ -189,21 +189,19 @@ void consultarHistorico(lista *list){
 
     scanf("%d", &id);
 
-    item *it = list->buscar(id);
+    item *it = tree->busca(tree->raiz, id);
 
     if(it == nullptr){
         printf("\nNão há paciente com esse ID.\n");
         return;
     }
 
-    // malabarismos necessários devido ao método de busca da lista
-    if(it == list->head && list->head->p->id == id) it->p->hist.consultar(); 
-    else it->prox->p->hist.consultar();
+    it->p->hist.consultar();
 }
 
 // obito! obito uchiha!
-void registrarObito(lista *list, heap *pqueue){
-    if(list->listaVazia()){
+void registrarObito(avl *tree, heap *pqueue){
+    if(tree->avl_vazia()){
         printf("\nNão há pacientes registrados no sistema.\n");
         return;
     }
@@ -224,21 +222,19 @@ void registrarObito(lista *list, heap *pqueue){
     }
 
     // guardando o paciente em uma variável temporária para armazenar seu nome
-    item *it = list->buscar(id);
+    item *it = tree->busca(tree->raiz, id);
 
     if(it == nullptr){
         printf("\nPaciente não existe.\n");
         return;
     }
 
-    // malabarismos necessários devido ao método de busca da lista
-    if(it == list->head && list->head->p->id == id) nomePaciente = it->p->nome; 
-    else nomePaciente = it->prox->p->nome;
+    nomePaciente = it->p->nome;
 
-    list->apagar(id);
+    tree->apagar(id);
     printf("\n%s morreu :(\nDescanse em paz!\n", nomePaciente.c_str());
 }
 
-void consultarLista(lista *list){
-    list->listar();
+void consultarLista(avl *tree){
+    tree->listar(tree->raiz);
 }
