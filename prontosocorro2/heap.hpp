@@ -28,6 +28,7 @@ typedef struct heap{
     void heap_fix_up();
     bool inserir(paciente *pac);
     int priority(int i);
+    int get_id(int i);
     int menorFilho(int i);
     bool temFilho(int i);
     void heap_fix_down();
@@ -37,6 +38,7 @@ typedef struct heap{
     void heap_consultar();
     int heap_tamanho();
     paciente *buscar(int id);
+    bool comparar(int a, int b);
 }heap;
 
 

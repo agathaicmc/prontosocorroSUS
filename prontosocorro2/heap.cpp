@@ -32,6 +32,10 @@ int heap::priority(int i){
     return fila[i]->priority;
 }
 
+int heap::get_id(int i){
+    return fila[i]->id;
+}
+
 // função para trocar dois elementos da heap de lugar
 void heap::heap_swap(int i, int j){
     paciente *temp = fila[i];
@@ -45,7 +49,7 @@ void heap::heap_fix_up(){
     int parent = pai(w);
 
     // troca um elemento com seu pai até que ele esteja na posição certa
-    while (w > 0 && priority(w) < priority(parent)){
+    while (w > 0 && comparar(w, parent)){
         heap_swap(w, parent);
         w = parent;
         parent = pai(parent);
@@ -71,7 +75,10 @@ bool heap::inserir(paciente *pac){
 
 // função para descobrir o maior filho de um dado elemento
 int heap::menorFilho(int i){
-    if(priority(filhoEsq(i)) < priority(filhoDir(i))) return filhoEsq(i);
+    // caso o filho direito seja maior que fim, retorna filho esquerdo (não precisa da mesma verificação pro filho esquerdo pois é impossível pela propriedade de heap)
+    if(filhoDir(i) > fim) return filhoEsq(i);
+
+    if(comparar(filhoEsq(i), filhoDir(i))) return filhoEsq(i);
     else return filhoDir(i);
 }
 
@@ -88,7 +95,8 @@ void heap::heap_fix_down(){
     // até que esteja na posição certas
     while(temFilho(w)){
         int m = menorFilho(w);
-        if(priority(w) <= priority(m)) break;
+        // se for true significa que o pai é menor que o filho, então não deve trocar
+        if(comparar(w, m)) break;
         heap_swap(w, m);
         w = m;
     }
@@ -104,10 +112,10 @@ paciente *heap::retirar(){
     paciente *temp = fila[0];
     // copia fim no início
     fila[0] = fila[fim];
-    // restaura ordem da heap
-    heap_fix_down();
     // atualiza a posição do fim
     fim--;
+    // restaura ordem da heap
+    heap_fix_down();
     // retorna o paciente removido
     return temp;
 }
@@ -169,4 +177,13 @@ paciente *heap::buscar(int id){
         if(fila[i]->id == id) return fila[i];
     }
     return nullptr;
+}
+
+// true significa que o primeiro é menor (vem antes), false significa que o segundo é menor
+bool heap::comparar(int a, int b){
+    if(priority(a) < priority(b)) return true;
+    if(priority(a) > priority(b)) return false;
+    
+    if(get_id(a) < get_id(b)) return true;
+    return false;
 }

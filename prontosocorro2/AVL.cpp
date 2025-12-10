@@ -172,8 +172,10 @@ item *avl::apagaItem(item *raiz, int id){
         // caso 2: nó com 2 filhos: pega o SUCESSOR da chave
         // pega o nó mais a esquerda da subárvore direita
         for(temp = raiz->dir; temp->esq != nullptr; temp = temp->esq);
-        // copia o paciente do temp na raiz
+        // troca o raiz com o temp
+        paciente *aux = raiz->p;    
         raiz->p = temp->p;
+        temp->p = aux;
         // remove o sucessor à direita da raiz
         raiz->dir = apagaItem(raiz->dir, temp->p->id);
     }
@@ -194,8 +196,8 @@ item *avl::busca(item *raiz, int id){
     if(raiz == nullptr) return nullptr;
 
     if(raiz->p->id == id) return raiz;
-    if(raiz->p->id > id) return busca(raiz->esq, id);
-    return busca(raiz->dir, id);
+    else if(raiz->p->id > id) return busca(raiz->esq, id);
+    else return busca(raiz->dir, id);
 }
 
 // função para atravessar a avl em ordem e listar seus elementos
