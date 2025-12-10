@@ -3,9 +3,10 @@
     #include "historico.hpp"
 	#include "paciente.hpp"
     #include "heap.hpp"
-    #include "lista.hpp"
+    #include "fila.hpp"
+    #include "AVL.hpp"
 
-    bool SAVE(lista *lista, fila *fila); // Salva os itens da lista e da fila em arquivos
-    bool LOAD(lista *lista, fila *fila); // Carrega os itens dos arquivos na lista e na fila
+    bool SAVE(avl *avl, heap *heap); // Salva os itens da lista (AVL) e da fila (heap) em arquivos
+    bool LOAD(avl *avl, heap *heap); // Carrega os itens dos arquivos na lista (AVL) e na fila (heap)
 	  
 #endif

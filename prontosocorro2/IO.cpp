@@ -2,64 +2,70 @@
 #include <cstdio>
 
 // Função para salvar os dados em um arquivo binário
-bool SAVE(lista *lista, heap *heap) {
-    if(!lista || !heap) return false;
+bool SAVE(avl *avl, heap *heap){
+    if(!avl || !heap) return false;
 
-    // Salvando itens da lista
+    // Salvando itens da avl
     /*
-    As informações da lista são salvos em uma ordem determinada para facilitar a leitura posteriormente
+    As informações da avl são salvos em uma ordem determinada para facilitar a leitura posteriormente
     Antes de cada string é escrito o tamanho dela, para saber quantos caracteres devem ser lidos
     */
 
-    // Abrindo o arquivo da lista no modo de escrita binário, retorna false se houver algum erro
-    FILE *fp_lista = fopen("lista_itens.bin", "wb");
-    if(!fp_lista) return false;
+    // Abrindo o arquivo da avl no modo de escrita binário, retorna false se houver algum erro
+    FILE *fp_avl = fopen("avl_itens.bin", "wb");
+    if(!fp_avl) return false;
 
     // Escreve o valor idAtual para não pegar o id de um paciente falecido posteriormente
-    fwrite(&(lista->idAtual), sizeof(int), 1, fp_lista);
+    fwrite(&(avl->idAtual), sizeof(int), 1, fp_avl);
 
-    // Escreve o número de itens da lista, para saber quantas vezes deve ser feita a leitura
-    fwrite(&(lista->qtd), sizeof(int), 1, fp_lista);
+    // Escreve o número de itens da avl, para saber quantas vezes deve ser feita a leitura
+    fwrite(&(avl->qtd), sizeof(int), 1, fp_avl);
 
-    // Laço para percorrer a lista inteira
-    for(item *it = lista->head; it != nullptr; it = it->prox) {
-        // Para cada paciente:
+    // BFS para salvar a avl por níveis
+    fila f;
+    f.inserir(avl->raiz);
 
+    while(!f.filaVazia()){
+        item *aux = f.retirar();
+        if(aux == nullptr) continue;
+        
         // Escreve o id
-        fwrite(&(it->p->id), sizeof(int), 1, fp_lista);
+        fwrite(&(aux->p->id), sizeof(int), 1, fp_avl);
 
         // Escreve o tamanho do nome
-        int len = it->p->nome.size();
-        fwrite(&len, sizeof(int), 1, fp_lista);
+        int len = aux->p->nome.size();
+        fwrite(&len, sizeof(int), 1, fp_avl);
 
         // Escreve o nome
-        fwrite(it->p->nome.data(), sizeof(char), len, fp_lista);
+        fwrite(aux->p->nome.data(), sizeof(char), len, fp_avl);
 
         // Escreve a prioridade
-        fwrite(&(it->p->priority), sizeof(int), 1, fp_lista);
+        fwrite(&(aux->p->priority), sizeof(int), 1, fp_avl);
 
         // Escreve quantidade de procedimentos do histórico
-        fwrite(&(it->p->hist.qtd), sizeof(int), 1, fp_lista);
+        fwrite(&(aux->p->hist.qtd), sizeof(int), 1, fp_avl);
 
         // Para cada um dos procedimentos, escreve seu tamanho e depois o procedimento em si
-        for(procedimento *p = it->p->hist.topo; p != nullptr; p = p->prox){
+        for(procedimento *p = aux->p->hist.topo; p != nullptr; p = p->prox){
             int len = p->tratamento.size();
-            fwrite(&len, sizeof(int), 1, fp_lista);
-            fwrite(p->tratamento.data(), sizeof(char), len, fp_lista);
+            fwrite(&len, sizeof(int), 1, fp_avl);
+            fwrite(p->tratamento.data(), sizeof(char), len, fp_avl);
         }
 
+        f.inserir(aux->esq);
+        f.inserir(aux->dir);
     }
 
-    // Fechando o arquivo da lista
-    fclose(fp_lista); fp_lista = nullptr;
+    // Fechando o arquivo da avl
+    fclose(fp_avl); fp_avl = nullptr;
 
 
     // Salvando os itens da heap
     /*
-    Na heap, apenas os números de id são salvos, pois como todos os pacientes que estão na heap estão também na lista,
+    Na heap, apenas os números de id são salvos, pois como todos os pacientes que estão na heap estão também na avl,
     não há necessidade de salvar todos os campos de informação novamente (inclusive, criar novos pacientes resulta
     na criação de dois pacientes que são a mesma pessoa, o que posteriormente causa vazamento de memória). Na leitura, 
-    o id é utilizado para obter o paciente por meio de uma busca na lista.
+    o id é utilizado para obter o paciente por meio de uma busca na avl.
     */
 
     // Abrindo o arquivo da heap no modo de escrita binário, retorna false se houver algum erro
@@ -70,7 +76,7 @@ bool SAVE(lista *lista, heap *heap) {
     int qtd = heap->heap_tamanho();
     fwrite(&(qtd), sizeof(int), 1, fp_heap);
 
-    // Laço que percorre pela lista
+    // Laço que percorre pela avl
     for(int i = 0; i < heap->heap_tamanho(); i++){
         // Escreve o id
         fwrite(&(heap->fila[i]->id), sizeof(int), 1, fp_heap);
@@ -84,85 +90,72 @@ bool SAVE(lista *lista, heap *heap) {
 }
 
 // Função para ler os itens salvos no arquivo binário
-bool LOAD(lista *lista, heap *heap){
-    if(!lista || !heap) return false;
+bool LOAD(avl *avl, heap *heap){
+    if(!avl || !heap) return false;
 
-    // Carregando os itens do arquivo na lista, na mesma ordem em que foram salvos
+    // Carregando os itens do arquivo na avl, na mesma ordem em que foram salvos
 
-    // Abrindo o arquivo da lista no modo de leitura binário, retorna false se houver algum erro
-    FILE *fp_lista = fopen("lista_itens.bin", "rb");
-    if(fp_lista == NULL) return false;
+    // Abrindo o arquivo da avl no modo de leitura binário, retorna false se houver algum erro
+    FILE *fp_avl = fopen("avl_itens.bin", "rb");
+    if(fp_avl == NULL) return false;
 
-    // Leitura do idAtual armazenado, já o colocando na lista
+    // Leitura do idAtual armazenado, já o colocando na avl
     int idAtual;
-    fread(&idAtual, sizeof(int), 1, fp_lista);
-    lista->idAtual = idAtual;
+    fread(&idAtual, sizeof(int), 1, fp_avl);
+    avl->idAtual = idAtual;
 
-    // Leitura da quantidade de itens da lista
+    // Leitura da quantidade de itens da avl
     int tam;
-    fread(&tam, sizeof(int), 1, fp_lista);
+    fread(&tam, sizeof(int), 1, fp_avl);
 
-    // Lista de ponteiro para ponteiro para paciente, para guardar os pacientes lidos
-    paciente **pacs = new paciente*[tam];
-
-    // Laço para leitura de todos os itens da lista
+    // Laço para leitura de todos os itens da avl
     for(int i = 0; i<tam; i++){
-        // Para cada item da lista:
-
+        // Para cada item da avl:
 
         // Declaração de variáveis auxiliares
         int id, namelen, histlen, pri; string name;
 
         // Leitura do id
-        fread(&id, sizeof(int), 1, fp_lista);
+        fread(&id, sizeof(int), 1, fp_avl);
 
         // Leitura do tamanho do nome do paciente
-        fread(&namelen, sizeof(int), 1, fp_lista);
+        fread(&namelen, sizeof(int), 1, fp_avl);
 
         // Mudança de tamanho da string para acomodar corretamente o nome
         name.resize(namelen);
 
         // Leitura do nome do paciente
-        fread(&name[0], sizeof(char), namelen, fp_lista);
+        fread(&name[0], sizeof(char), namelen, fp_avl);
 
         // Leitura da prioridade do paciente
-        fread(&pri, sizeof(int), 1, fp_lista);
+        fread(&pri, sizeof(int), 1, fp_avl);
 
         // Criação de um novo paciente com o nome lido
-        pacs[i] = new paciente(name, pri);
+        paciente *pac = new paciente(name, pri);
 
         // Definição do id do novo paciente como o id lido
-        pacs[i]->id = id;
+        pac->id = id;
 
         // Leitura da quantidade de procedimentos no historico
-        fread(&histlen, sizeof(int), 1, fp_lista);
+        fread(&histlen, sizeof(int), 1, fp_avl);
 
         // Para cada um dos procedimentos, lê-se o tamanho do procedimento e depois o procedimento em si
         for(int j = 0; j<histlen; j++){
             string p;
             int plen;
-            fread(&plen, sizeof(int), 1, fp_lista);
+            fread(&plen, sizeof(int), 1, fp_avl);
             p.resize(plen);
-            fread(&p[0], sizeof(char), plen, fp_lista);
+            fread(&p[0], sizeof(char), plen, fp_avl);
 
             // Inserção do procedimento lido no histórico do paciente criado
-            pacs[i]->hist.inserir(p);
+            pac->hist.inserir(p);
         }
 
+        avl->inserir(pac);
+
     }
 
-    /*
-    Laço para inserir cada um dos pacientes salvos no array "pacs" na lista em ordem inversa,
-    garantindo que a lista lida tenha a mesma ordem da lista que foi salva anteriormente
-    */
-    for(int i = 0; i<tam; i++){
-        lista->inserir(pacs[i]);
-    }
-
-    // Libera memória e fecha o arquivo da lista
-    delete[] pacs;
-    fclose(fp_lista);
-
+    fclose(fp_avl);
 
     // Carregando os itens do arquvio da heap
 
@@ -175,16 +168,15 @@ bool LOAD(lista *lista, heap *heap){
 
     // Laço para leitura de todos os itens, que nesse caso, são apenas os ids
     for(int i = 0; i<tam; i++){
-
         // Declaração de variável auxiliar
         int id;
 
         // Leitura do id
         fread(&id, sizeof(int), 1, fp_heap);
 
-        // Inserção na heap por meio de uma busca na lista (novamente, todos os pacientes da heap estão necessariamente na lista)
-        item * aux = lista->buscar(id);
-        // Tratamento de exceção em que o elemento buscado é o head da lista
+        // Inserção na heap por meio de uma busca na avl (novamente, todos os pacientes da heap estão necessariamente na avl)
+        item * aux = avl->busca(avl->raiz, id);
+        
         heap->inserir(aux->p);
     }
 
