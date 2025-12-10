@@ -6,7 +6,6 @@
 //construtor
 heap::heap(){
     fim = -1;
-    qtd = 0;
 }
 
 //destrutor
@@ -128,8 +127,12 @@ void heap::heap_consultar(){
         return;
     }
 
-    for(int i = 0; i <= fim; i++){
+    int tam = heap_tamanho();
+    paciente *temp[tam];
+
+    for(int i = 0; i < tam; i++){
         paciente *aux = retirar();
+        temp[i] = aux;
         printf("Nome: %s\n", aux->nome.c_str());
         printf("ID: %d\n", aux->id);
         printf("Prioridade: %d - ", aux->priority);
@@ -150,6 +153,10 @@ void heap::heap_consultar(){
                 printf("Não Urgente\n\n");
                 break;
         }
+    }
+
+    for(int i = 0; i < tam; i++){
+        inserir(temp[i]);
     }
 }
 

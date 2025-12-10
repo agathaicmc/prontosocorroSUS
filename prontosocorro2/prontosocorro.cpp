@@ -2,7 +2,7 @@
 #include <string>
 #include <iostream>
 using namespace std;
-//#include "IO.hpp"
+#include "IO.hpp"
 #include "historico.hpp"
 #include "paciente.hpp"
 #include "heap.hpp"
@@ -16,30 +16,32 @@ void chamarPaciente(heap *pqueue);
 void consultarFila(heap *pqueue);
 void consultarHistorico(avl *tree);
 void consultarLista(avl *tree);
+void buscaID(avl *tree);
 
 int main(void){
 
     avl a;
     heap h;
 
-    //LOAD(&a, &h);
+    LOAD(&a, &h);
 
     int comandoAtual = -1;
 
     // rodando comandos de forma indefinida
 
-    while(comandoAtual != 9){
+    while(comandoAtual != 10){
         // interface simples para o usuário
         printf("\nLista de comandos do sistema hospitalar:\n");
         printf("1: Registrar paciente\n");
         printf("2: Registrar óbito de paciente\n");
         printf("3: Adicionar procedimento ao histórico médico de um paciente\n");
         printf("4: Desfazer procedimento do histórico médico de um paciente\n");
-        printf("5: Chamar paciente para atendimento médico\n");
+        printf("5: Dar alta ao paciente de maior prioridade\n");
         printf("6: Mostrar fila de espera\n");
         printf("7: Mostrar histórico médico de um paciente\n");
         printf("8: Listar registros de pacientes\n");
-        printf("9: Sair\n\n");
+        printf("9: Buscar paciente por ID\n");
+        printf("10: Sair\n\n");
         printf("Digite o comando que deseja executar: ");
 
         scanf("%d", &comandoAtual);
@@ -73,13 +75,16 @@ int main(void){
                 consultarLista(&a);
                 break;
             case 9:
+                buscaID(&a);
+                break;
+            case 10:
                 printf("\nEncerrando sistema...\n");
                 break;
         }
 
     }
 
-    //SAVE(&a, &h);
+    SAVE(&a, &h);
 
     return(0);
 }
@@ -169,7 +174,7 @@ void removerProcedimento(heap *pqueue){
 void chamarPaciente(heap *pqueue){
     paciente *pac = pqueue->retirar();
     if(pac == nullptr) return;
-    printf("\n%s foi chamado para atendimento!\n", pac->nome.c_str());
+    printf("\n%s recebeu alta!\n", pac->nome.c_str());
 }
 
 // função que imprime todos os pacientes da fila
@@ -235,6 +240,53 @@ void registrarObito(avl *tree, heap *pqueue){
     printf("\n%s morreu :(\nDescanse em paz!\n", nomePaciente.c_str());
 }
 
+// função de buscar um paciente por um id
+void buscaID(avl *tree){
+    if(tree->avl_vazia()){
+        printf("\nNão há pacientes registrados no sistema.\n");
+        return;
+    }
+
+    int id;
+    printf("\nDigite o ID de um paciente para buscar seu registro.\n");
+
+    scanf("%d", &id);
+
+    item *it = tree->busca(tree->raiz, id);
+
+    if(it == nullptr){
+        printf("\nPaciente não existe.\n");
+        return;
+    }
+
+    int p = it->p->priority;
+    printf("Nome: %s\n", it->p->nome.c_str());
+    printf("ID: %d\n", it->p->id);
+    printf("Prioridade: %d - ", p);
+    switch (p){
+        case 1:
+            printf("Emergência\n\n");
+            break;
+        case 2:
+            printf("Muito Urgente\n\n");
+            break;
+        case 3:
+            printf("Urgente\n\n");
+            break;
+        case 4:
+            printf("Pouco Urgente\n\n");
+            break;
+        case 5:
+            printf("Não Urgente\n\n");
+            break;
+    }
+}
+
+// função de listar os registros de todos os pacientes na "lista" (avl)
 void consultarLista(avl *tree){
+    if(tree->avl_vazia()){
+        printf("\nNão há pacientes registrados no sistema.\n");
+        return;
+    }
     tree->listar(tree->raiz);
 }

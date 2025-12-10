@@ -9,7 +9,7 @@
 avl::avl(){
     raiz = nullptr;
     qtd = 0;
-    idAtual = 0;
+    idAtual = 1;
 }
 
 // função auxiliar para o destrutor
@@ -157,13 +157,15 @@ item *avl::apagaItem(item *raiz, int id){
     else{
         item *temp;
         // caso 1: nó com 0 ou 1 filhos
-        if(raiz->esq = nullptr){
+        if(raiz->esq == nullptr){
             temp = raiz->dir;
+            delete raiz->p;
             delete raiz;
             return temp;
         }
-        else if(raiz->dir = nullptr){
+        else if(raiz->dir == nullptr){
             temp = raiz->esq;
+            delete raiz->p;
             delete raiz;
             return temp;
         }
@@ -193,7 +195,7 @@ item *avl::busca(item *raiz, int id){
 
     if(raiz->p->id == id) return raiz;
     if(raiz->p->id > id) return busca(raiz->esq, id);
-    if(raiz->p->id < id) return busca(raiz->dir, id);
+    return busca(raiz->dir, id);
 }
 
 // função para atravessar a avl em ordem e listar seus elementos

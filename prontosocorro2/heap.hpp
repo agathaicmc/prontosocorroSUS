@@ -13,7 +13,6 @@ feita com base no valor "priority" de cada paciente
 typedef struct heap{
     paciente *fila[MAX_FILA];
     int fim;
-    int qtd;
 
     //construtor
     heap();
