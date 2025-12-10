@@ -17,6 +17,7 @@ void avl::destroyItem(item *no){
     if (no == nullptr) return;
     destroyItem(no->esq);
     destroyItem(no->dir);
+    delete (no->p);
     delete (no);
 }
 
