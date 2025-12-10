@@ -2,8 +2,8 @@
 #include <cstdio>
 
 // Função para salvar os dados em um arquivo binário
-bool SAVE(lista *lista, fila *fila) {
-    if(!lista || !fila) return false;
+bool SAVE(lista *lista, heap *heap) {
+    if(!lista || !heap) return false;
 
     // Salvando itens da lista
     /*
@@ -25,7 +25,6 @@ bool SAVE(lista *lista, fila *fila) {
     for(item *it = lista->head; it != nullptr; it = it->prox) {
         // Para cada paciente:
 
-
         // Escreve o id
         fwrite(&(it->p->id), sizeof(int), 1, fp_lista);
 
@@ -35,6 +34,9 @@ bool SAVE(lista *lista, fila *fila) {
 
         // Escreve o nome
         fwrite(it->p->nome.data(), sizeof(char), len, fp_lista);
+
+        // Escreve a prioridade
+        fwrite(&(it->p->priority), sizeof(int), 1, fp_lista);
 
         // Escreve quantidade de procedimentos do histórico
         fwrite(&(it->p->hist.qtd), sizeof(int), 1, fp_lista);
@@ -52,38 +54,38 @@ bool SAVE(lista *lista, fila *fila) {
     fclose(fp_lista); fp_lista = nullptr;
 
 
-    // Salvando os itens da fila
+    // Salvando os itens da heap
     /*
-    Na fila, apenas os números de id são salvos, pois como todos os pacientes que estão na fila estão também na lista,
+    Na heap, apenas os números de id são salvos, pois como todos os pacientes que estão na heap estão também na lista,
     não há necessidade de salvar todos os campos de informação novamente (inclusive, criar novos pacientes resulta
     na criação de dois pacientes que são a mesma pessoa, o que posteriormente causa vazamento de memória). Na leitura, 
     o id é utilizado para obter o paciente por meio de uma busca na lista.
     */
 
-    // Abrindo o arquivo da fila no modo de escrita binário, retorna false se houver algum erro
-    FILE *fp_fila = fopen("fila_itens.bin", "wb");
-    if(!fp_fila) return false;
+    // Abrindo o arquivo da heap no modo de escrita binário, retorna false se houver algum erro
+    FILE *fp_heap = fopen("heap_itens.bin", "wb");
+    if(!fp_heap) return false;
 
-    // Escreve a quantidade de elementos da fila
-    fwrite(&(fila->qtd), sizeof(int), 1, fp_fila);
+    // Escreve a quantidade de elementos da heap
+    int qtd = heap->heap_tamanho();
+    fwrite(&(qtd), sizeof(int), 1, fp_heap);
 
     // Laço que percorre pela lista
-    for(posicao *it = fila->frente; it != nullptr; it = it->prox){
+    for(int i = 0; i < heap->heap_tamanho(); i++){
         // Escreve o id
-        fwrite(&(it->p->id), sizeof(int), 1, fp_fila);
-
+        fwrite(&(heap->fila[i]->id), sizeof(int), 1, fp_heap);
     }
 
-    // Fechando o arquivo da fila
-    fclose(fp_fila); fp_fila = nullptr;
+    // Fechando o arquivo da heap
+    fclose(fp_heap); fp_heap = nullptr;
 
     // Retorna true se a leitura foi feita com êxito
     return true;
 }
 
 // Função para ler os itens salvos no arquivo binário
-bool LOAD(lista *lista, fila *fila){
-    if(!lista || !fila) return false;
+bool LOAD(lista *lista, heap *heap){
+    if(!lista || !heap) return false;
 
     // Carregando os itens do arquivo na lista, na mesma ordem em que foram salvos
 
@@ -109,7 +111,7 @@ bool LOAD(lista *lista, fila *fila){
 
 
         // Declaração de variáveis auxiliares
-        int id; int namelen; string name; int histlen;
+        int id, namelen, histlen, pri; string name;
 
         // Leitura do id
         fread(&id, sizeof(int), 1, fp_lista);
@@ -123,8 +125,11 @@ bool LOAD(lista *lista, fila *fila){
         // Leitura do nome do paciente
         fread(&name[0], sizeof(char), namelen, fp_lista);
 
+        // Leitura da prioridade do paciente
+        fread(&pri, sizeof(int), 1, fp_lista);
+
         // Criação de um novo paciente com o nome lido
-        pacs[i] = new paciente(name);
+        pacs[i] = new paciente(name, pri);
 
         // Definição do id do novo paciente como o id lido
         pacs[i]->id = id;
@@ -159,14 +164,14 @@ bool LOAD(lista *lista, fila *fila){
     fclose(fp_lista);
 
 
-    // Carregando os itens do arquvio da fila
+    // Carregando os itens do arquvio da heap
 
-    // Abrindo o arquivo da fila no modo de leitura binário, retorna false se houver algum erro
-    FILE *fp_fila = fopen("fila_itens.bin", "rb");
-    if(fp_fila == NULL) return false;
+    // Abrindo o arquivo da heap no modo de leitura binário, retorna false se houver algum erro
+    FILE *fp_heap = fopen("heap_itens.bin", "rb");
+    if(fp_heap == NULL) return false;
 
-    // Leitura da quantidade de itens da fila
-    fread(&tam, sizeof(int), 1, fp_fila);
+    // Leitura da quantidade de itens da heap
+    fread(&tam, sizeof(int), 1, fp_heap);
 
     // Laço para leitura de todos os itens, que nesse caso, são apenas os ids
     for(int i = 0; i<tam; i++){
@@ -175,17 +180,16 @@ bool LOAD(lista *lista, fila *fila){
         int id;
 
         // Leitura do id
-        fread(&id, sizeof(int), 1, fp_fila);
+        fread(&id, sizeof(int), 1, fp_heap);
 
-        // Inserção na fila por meio de uma busca na lista (novamente, todos os pacientes da fila estão necessariamente na lista)
+        // Inserção na heap por meio de uma busca na lista (novamente, todos os pacientes da heap estão necessariamente na lista)
         item * aux = lista->buscar(id);
         // Tratamento de exceção em que o elemento buscado é o head da lista
-        if(id == lista->head->p->id) fila->inserir(aux->p);
-        else fila->inserir(aux->prox->p);
+        heap->inserir(aux->p);
     }
 
     // Libera memória
-    fclose(fp_fila);
+    fclose(fp_heap);
 
     // Retorna true se a leitura foi feita com êxito
     return true;
