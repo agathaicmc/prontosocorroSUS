@@ -141,24 +141,24 @@ void heap::heap_consultar(){
     for(int i = 0; i < tam; i++){
         paciente *aux = retirar();
         temp[i] = aux;
-        printf("Nome: %s\n", aux->nome.c_str());
+        printf("\nNome: %s\n", aux->nome.c_str());
         printf("ID: %d\n", aux->id);
         printf("Prioridade: %d - ", aux->priority);
         switch (aux->priority){
             case 1:
-                printf("Emergência\n\n");
+                printf("Emergência\n");
                 break;
             case 2:
-                printf("Muito Urgente\n\n");
+                printf("Muito Urgente\n");
                 break;
             case 3:
-                printf("Urgente\n\n");
+                printf("Urgente\n");
                 break;
             case 4:
-                printf("Pouco Urgente\n\n");
+                printf("Pouco Urgente\n");
                 break;
             case 5:
-                printf("Não Urgente\n\n");
+                printf("Não Urgente\n");
                 break;
         }
     }
